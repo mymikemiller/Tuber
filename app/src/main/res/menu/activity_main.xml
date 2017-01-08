@@ -3,4 +3,8 @@
         android:id="@+id/menu_accounts"
         android:icon="@drawable/ic_mailboxes_accounts"
         android:title="@string/accounts" />
+    <item
+        android:id="@+id/menu_playlists"
+        android:icon="@drawable/ic_mailboxes_accounts"
+        android:title="@string/playlist" />
 </menu>
