@@ -26,11 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ACCOUNT_PICKER = 0;
     private static final int REQUEST_PLAYLIST_PICKER = 1;
 
-    final HttpTransport mTransport = AndroidHttp.newCompatibleTransport();
-    final JsonFactory mJsonFactory = new GsonFactory();
+    private GoogleAccountCredential mCredential;
 
-    GoogleAccountCredential mCredential;
-    YouTube mYoutube;
+    private PlaylistManager mPlayistManager;
     private String mChosenAccountName;
     private String mPlaylistId;
 
@@ -47,14 +45,21 @@ public class MainActivity extends AppCompatActivity {
             loadPlaylist();
         }
 
+        GoogleAccountCredential mCredential;
+
+        final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        final JsonFactory jsonFactory = new GsonFactory();
+
         mCredential =
                 GoogleAccountCredential.usingOAuth2(getApplicationContext(), Lists.newArrayList(Auth.SCOPES));
         mCredential.setSelectedAccountName(mChosenAccountName);
         mCredential.setBackOff(new ExponentialBackOff());
 
         String appName = getResources().getString(R.string.app_name);
-        mYoutube = new YouTube.Builder(mTransport, mJsonFactory, mCredential).setApplicationName(
-                        appName).build();
+        YouTube youTube = new YouTube.Builder(transport, jsonFactory, mCredential).setApplicationName(
+                appName).build();
+
+        mPlayistManager = new PlaylistManager(youTube, mPlaylistId);
     }
 
     private void chooseAccount() {

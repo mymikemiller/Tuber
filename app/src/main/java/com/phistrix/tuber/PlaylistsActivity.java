@@ -138,7 +138,8 @@ public class PlaylistsActivity extends AppCompatActivity {
                     tuberPlaylists.add(tuberPlaylist);
                 }
 
-                ArrayAdapter<TuberPlaylist> adapter = new ArrayAdapter<TuberPlaylist>(getApplicationContext(),android.R.layout.simple_list_item_1, tuberPlaylists);
+                ArrayAdapter<TuberPlaylist> adapter = new ArrayAdapter<TuberPlaylist>(
+                        getApplicationContext(),android.R.layout.simple_list_item_1, tuberPlaylists);
                 mPlaylistListView.setAdapter(adapter);
 
                 mPlaylistListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
