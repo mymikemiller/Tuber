@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,8 +28,11 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Playlist;
 import com.google.api.services.youtube.model.PlaylistListResponse;
+import com.google.api.services.youtube.model.PlaylistSnippet;
+import com.google.api.services.youtube.model.PlaylistStatus;
 import com.google.common.collect.Lists;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,9 +153,7 @@ public class PlaylistsActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
                     {
                         TuberPlaylist selectedPlaylist=tuberPlaylists.get(position);
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra(PLAYLIST_KEY, selectedPlaylist);
-                        setResult(RESULT_OK, resultIntent);
+                        setResult(RESULT_OK, createResultIntent(selectedPlaylist));
                         finish();
                     }
                 });
@@ -158,5 +161,76 @@ public class PlaylistsActivity extends AppCompatActivity {
 
         };
         task.execute();
+    }
+
+    private Intent createResultIntent(TuberPlaylist resultPlaylist) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(PLAYLIST_KEY, resultPlaylist);
+        return resultIntent;
+    }
+
+    public void onPlaylistButtonClicked(View v){
+        if(v.getId() == R.id.create_playlist_button){
+
+            EditText playlistNameEditText = (EditText)findViewById(R.id.create_playlist_name);
+            String playlistName = playlistNameEditText.getText().toString();
+
+            if (playlistName.isEmpty()) {
+                Toast.makeText(this, R.string.enter_playlist_name,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                createPlaylist(playlistName);
+            }
+        }
+    }
+
+    private void createPlaylist(final String playlistName) {
+        AsyncTask<Void, Void, TuberPlaylist> task = new AsyncTask<Void, Void, TuberPlaylist>() {
+            @Override
+            protected TuberPlaylist doInBackground(Void... params) {
+                try {
+                    return insertPlaylist(playlistName);
+                } catch (IOException exception) {
+                    // ignore
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(TuberPlaylist playlist) {
+                setResult(RESULT_OK, createResultIntent(playlist));
+                finish();
+            }
+        };
+        task.execute();
+    }
+
+    /**
+     * Create a playlist and add it to the authorized account.
+     */
+    private TuberPlaylist insertPlaylist(String playlistName) throws IOException {
+
+        // This code constructs the playlist resource that is being inserted.
+        // It defines the playlist's title, description, and privacy status.
+        PlaylistSnippet playlistSnippet = new PlaylistSnippet();
+        playlistSnippet.setTitle(playlistName);
+        playlistSnippet.setDescription(getResources().getString(R.string.playlist_description));
+        PlaylistStatus playlistStatus = new PlaylistStatus();
+        playlistStatus.setPrivacyStatus("private");
+
+        Playlist youTubePlaylist = new Playlist();
+        youTubePlaylist.setSnippet(playlistSnippet);
+        youTubePlaylist.setStatus(playlistStatus);
+
+        // Call the API to insert the new playlist. In the API call, the first
+        // argument identifies the resource parts that the API response should
+        // contain, and the second argument is the playlist being inserted.
+        YouTube.Playlists.Insert playlistInsertCommand =
+                mYoutube.playlists().insert("snippet,status", youTubePlaylist);
+        Playlist playlistInserted = playlistInsertCommand.execute();
+        TuberPlaylist tuberPlaylist = new TuberPlaylist(playlistInserted);
+
+        return tuberPlaylist;
+
     }
 }

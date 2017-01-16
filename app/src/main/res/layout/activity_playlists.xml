@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.phistrix.tuber.PlaylistsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_a_playlist"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_alignParentLeft="true"
+            android:hint="@string/playlist_name"
+            android:layout_weight="1"
+            android:id="@+id/create_playlist_name"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent">
+        </EditText>
+
+        <Button
+            android:text="@string/create"
+            android:id="@+id/create_playlist_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:onClick="onPlaylistButtonClicked">
+        </Button>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_a_playlist"/>
 
     <ListView
         android:id="@+id/listViewPlaylists"
@@ -18,4 +53,4 @@
         android:divider="#0000CC"
         >
     </ListView>
-</RelativeLayout>
+</LinearLayout>

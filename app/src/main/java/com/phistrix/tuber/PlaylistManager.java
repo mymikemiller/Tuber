@@ -22,6 +22,5 @@ public class PlaylistManager {
     public PlaylistManager(YouTube youTube, String playlistId) {
         mYouTube = youTube;
         mPlaylistId = playlistId;
-
     }
 }

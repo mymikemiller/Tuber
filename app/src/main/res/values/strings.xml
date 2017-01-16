@@ -3,4 +3,10 @@
     <string name="accounts">Account</string>
     <string name="playlist">Playlist</string>
     <string name="playlist_key">playlist</string>
+    <string name="create_a_playlist">Create a playlist:</string>
+    <string name="create">Create</string>
+    <string name="select_a_playlist">Or select an existing playlist:</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_description">Playlist managed by Tuber for Android</string>
+    <string name="enter_playlist_name">Enter the name of a playlist to create</string>
 </resources>
